@@ -38,6 +38,7 @@ names(dat) <- labels
 dat <-tbl_df(dat)
 
 
+
 ```
 
 •	Create choropleth maps that include a title and legend for each variable
@@ -59,7 +60,7 @@ plot(syr, col=color.vec.ordered, main = "Total Population in Onondaga County: No
 
 map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
 
-legend.text=c(" 161-2156"," 2156-2726"," 2726-3488"," 3488-4524"," 4524-7790")
+legend.text <- c(" 161-2156"," 2156-2726"," 2726-3488"," 3488-4524"," 4524-7790")
 
 legend( "bottomright", bg="white",
         pch=19, pt.cex=1.5, cex=0.7,

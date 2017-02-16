@@ -123,14 +123,19 @@ summarize(datGrouped, total = n())
 
 ``` r
 mySingles <- syr[syr$LandUse == "Single Family", ]
+notSingles <- syr[syr$LandUse != "Single Family", ]
+
+plot(notSingles, col = "grey", border = "grey", main = "Single Family Houses by Neighborhood")
+
+
 
 myPallete <- c(brewer.pal(12, "Set3"), brewer.pal(9, "Set1"), brewer.pal(12, "Paired"))
 
 palette(myPallete)
 
-plot(mySingles, col = as.factor(mySingles$Nhood), border = F, main = "Single Family Houses by Neighborhood")
+plot(mySingles, col = as.factor(mySingles$Nhood), border = as.factor(mySingles$Nhood), add = T)
 legend( "bottomright", bg="white",
-        pch=19, pt.cex=.5, cex=.5,
+        pch=19, pt.cex=.5, cex=.35,
         legend=levels(mySingles$Nhood), 
         col=palette(), 
         box.col="white",
@@ -145,24 +150,49 @@ Question 2: Where does land in Syracuse have the highest value?
 • Create a table of the count of single family homes with values above $200k in each neighborhood, as a pecentage of all single family homes
 
 ``` r
- myTable <- summarize(datGrouped, total = n(), homesAbove200 = sum(AssessedVa > 200000))
-arrange(myTable, desc(homesAbove200))
+ myTable <- summarize(datGrouped, total = n(), homesAbove200 = round(sum(AssessedVa > 200000)/nrow(mySingles)*100, digits = 3))
+
+myTable <- arrange(myTable, desc(homesAbove200))
+
+myTable$homesAbove200 <- paste(myTable$homesAbove200, "%", sep = "")
+
+print(myTable, n = 31)
 ```
 
     ## # A tibble: 31 × 3
     ##                      Nhood total homesAbove200
-    ##                     <fctr> <int>         <int>
-    ## 1                 Sedgwick   892           130
-    ## 2              Meadowbrook  1721            60
-    ## 3  University Neighborhood   803            17
-    ## 4               Strathmore  1475            16
-    ## 5                Winkworth   411            11
-    ## 6             Lincoln Hill   580             7
-    ## 7             South Valley  1605             5
-    ## 8           Outer Comstock   697             3
-    ## 9                Northside  1508             2
-    ## 10                Eastwood  3605             1
-    ## # ... with 21 more rows
+    ##                     <fctr> <int>         <chr>
+    ## 1                 Sedgwick   892        0.533%
+    ## 2              Meadowbrook  1721        0.246%
+    ## 3  University Neighborhood   803         0.07%
+    ## 4               Strathmore  1475        0.066%
+    ## 5                Winkworth   411        0.045%
+    ## 6             Lincoln Hill   580        0.029%
+    ## 7             South Valley  1605         0.02%
+    ## 8           Outer Comstock   697        0.012%
+    ## 9                Northside  1508        0.008%
+    ## 10                Eastwood  3605        0.004%
+    ## 11         University Hill    17        0.004%
+    ## 12                Brighton  1398            0%
+    ## 13          Court-Woodlawn  1859            0%
+    ## 14                Downtown     1            0%
+    ## 15                 Elmwood   909            0%
+    ## 16            Far Westside   471            0%
+    ## 17            Hawley-Green    52            0%
+    ## 18               Lakefront    24            0%
+    ## 19           Near Eastside    93            0%
+    ## 20           Near Westside   521            0%
+    ## 21            North Valley  1194            0%
+    ## 22               Park Ave.   167            0%
+    ## 23           Prospect Hill    29            0%
+    ## 24            Salt Springs  1029            0%
+    ## 25              Skunk City   345            0%
+    ## 26            South Campus    25            0%
+    ## 27               Southside   481            0%
+    ## 28               Southwest   419            0%
+    ## 29               Tipp Hill   785            0%
+    ## 30       Washington Square   425            0%
+    ## 31                Westcott   851            0%
 
 • Plot the value / acre of all parcels in Syracuse
 
@@ -204,7 +234,7 @@ datGrouped <- group_by(singles, Nhood)
          fiftyth = quantile(age, .5, na.rm = T),
          seventyFifth = quantile(age, .75, na.rm = T),
          ninetyth = quantile(age, .9, na.rm = T))
- 
+ options(tibble.width = Inf)
  myTable <- arrange(myTable, tenth)
  print(myTable, n = 45)
 ```

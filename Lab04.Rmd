@@ -2,7 +2,7 @@
 title: "Lab04"
 author: "Chris Davis"
 date: "2/9/2017"
-output: html_document
+output: github_document
 ---
 
 ```{r}
@@ -49,14 +49,19 @@ summarize(datGrouped, total = n())
 
 ```{r}
 mySingles <- syr[syr$LandUse == "Single Family", ]
+notSingles <- syr[syr$LandUse != "Single Family", ]
+
+plot(notSingles, col = "grey", border = "grey", main = "Single Family Houses by Neighborhood")
+
+
 
 myPallete <- c(brewer.pal(12, "Set3"), brewer.pal(9, "Set1"), brewer.pal(12, "Paired"))
 
 palette(myPallete)
 
-plot(mySingles, col = as.factor(mySingles$Nhood), border = F, main = "Single Family Houses by Neighborhood")
+plot(mySingles, col = as.factor(mySingles$Nhood), border = as.factor(mySingles$Nhood), add = T)
 legend( "bottomright", bg="white",
-        pch=19, pt.cex=.5, cex=.5,
+        pch=19, pt.cex=.5, cex=.35,
         legend=levels(mySingles$Nhood), 
         col=palette(), 
         box.col="white",
@@ -71,8 +76,13 @@ Question 2: Where does land in Syracuse have the highest value?
 
 •	Create a table of the count of single family homes with values above $200k in each neighborhood, as a pecentage of all single family homes
 ```{r}
- myTable <- summarize(datGrouped, total = n(), homesAbove200 = sum(AssessedVa > 200000))
-arrange(myTable, desc(homesAbove200))
+ myTable <- summarize(datGrouped, total = n(), homesAbove200 = round(sum(AssessedVa > 200000)/nrow(mySingles)*100, digits = 3))
+
+myTable <- arrange(myTable, desc(homesAbove200))
+
+myTable$homesAbove200 <- paste(myTable$homesAbove200, "%", sep = "")
+
+print(myTable, n = 31)
 ```
 
 •	Plot the value / acre of all parcels in Syracuse
@@ -113,7 +123,7 @@ datGrouped <- group_by(singles, Nhood)
          fiftyth = quantile(age, .5, na.rm = T),
          seventyFifth = quantile(age, .75, na.rm = T),
          ninetyth = quantile(age, .9, na.rm = T))
- 
+ options(tibble.width = Inf)
  myTable <- arrange(myTable, tenth)
  print(myTable, n = 45)
 

@@ -133,7 +133,7 @@ datGrouped <- group_by(singles, Nhood)
 ```{r}
 years <- as.numeric(as.character(dat$YearBuilt))
 
-color.function <- colorRampPalette( c("light gray","steel blue" ) ) 
+color.function <- colorRampPalette( c("firebrick4", "light gray" ) ) 
 
 col.ramp <- color.function( 13 )
 
